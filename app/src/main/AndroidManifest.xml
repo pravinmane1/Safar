@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.clzproject.safar">
+    package="com.projectocean.safar">
 
     <application
         android:allowBackup="true"
@@ -9,60 +9,60 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AllTripsActivity" />
-        <activity android:name=".AllUsersActivity" />
-        <activity android:name=".CarsActivity" />
-        <activity android:name=".AdminLoginActivity" />
-        <activity android:name=".AdminDashboardActivity" />
-        <activity android:name=".SplashActivity">
+        <activity android:name="com.projectocean.safar.AllTripsActivity" />
+        <activity android:name="com.projectocean.safar.AllUsersActivity" />
+        <activity android:name="com.projectocean.safar.CarsActivity" />
+        <activity android:name="com.projectocean.safar.AdminLoginActivity" />
+        <activity android:name="com.projectocean.safar.AdminDashboardActivity" />
+        <activity android:name="com.projectocean.safar.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CardPayActivity" />
-        <activity android:name=".CardsActivity" />
+        <activity android:name="com.projectocean.safar.CardPayActivity" />
+        <activity android:name="com.projectocean.safar.CardsActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.projectocean.safar.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DashboardActivity"
+            android:name="com.projectocean.safar.DashboardActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MyTripsActivity"
+            android:name="com.projectocean.safar.MyTripsActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
+            android:name="com.projectocean.safar.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".VerifyLicenceActivity"
+            android:name="com.projectocean.safar.VerifyLicenceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PoliciesActivity"
+            android:name="com.projectocean.safar.PoliciesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HelpAndSuppportActivity"
+            android:name="com.projectocean.safar.HelpAndSuppportActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".WalletActivity"
+            android:name="com.projectocean.safar.WalletActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddMoneyActivity"
+            android:name="com.projectocean.safar.AddMoneyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ShowCarsActivity"
+            android:name="com.projectocean.safar.ShowCarsActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".AddDetailsActivity"
+            android:name="com.projectocean.safar.AddDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".OfferActivity"
+            android:name="com.projectocean.safar.OfferActivity"
             android:screenOrientation="portrait" />
     </application>
 

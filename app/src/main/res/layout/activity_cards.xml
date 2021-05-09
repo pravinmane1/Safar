@@ -14,12 +14,25 @@
         app:title="Your Cards"
         >
     </androidx.appcompat.widget.Toolbar>
-
+    <TextView
+        android:layout_below="@id/toolbar"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:id="@+id/id"
+        android:padding="2dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This is dummy app. \n PLEASE DO NOT PROVIDE ORIGINAL PAYMENT INFORMATION."/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_below="@+id/id"/>
 
     <include
         android:visibility="gone"

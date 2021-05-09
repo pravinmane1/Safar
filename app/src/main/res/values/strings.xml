@@ -3,4 +3,5 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="need_a_car"><b> Need A Car ? </b></string>
+    <string name="currency">"₹"</string>
 </resources>
