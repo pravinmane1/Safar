@@ -71,26 +71,18 @@ public class VerifyLicenceActivity extends AppCompatActivity {
                                     }
                                 });
 
-
                         AlertDialog alert = builder1.create();
                         hideKeyboard(VerifyLicenceActivity.this);
                         alert.show();
                         flag=true;
                     }
-
-
                     }
-
-
                 }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

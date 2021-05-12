@@ -32,19 +32,19 @@ public class AddMoneyActivity extends AppCompatActivity {
     Spinner spinner;
     FirebaseAuth mAuth;
     FirebaseDatabase mData;
-    DatabaseReference mRef,balRef,balRef2;
-    EditText atmNo,amt;
+    DatabaseReference mRef, balRef, balRef2;
+    EditText atmNo, amt;
     Button add;
-    String balInString,finalBalInString;
-    Integer balInInt,addBal;
+    Integer balInInt, addBal;
     String type = "regularCall";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_money);
-        Intent i=getIntent();
+        Intent i = getIntent();
 
-        if (i.hasExtra("type")){
+        if (i.hasExtra("type")) {
             type = i.getStringExtra("type");
         }
 
@@ -54,20 +54,20 @@ public class AddMoneyActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        mAuth=FirebaseAuth.getInstance();
-        mData=FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mData = FirebaseDatabase.getInstance();
 
 
-        spinner=(Spinner)findViewById(R.id.spinner);
-        atmNo=findViewById(R.id.atmNo);
-        amt=(EditText)findViewById(R.id.amt);
-        add=(Button)findViewById(R.id.button2);
+        spinner = (Spinner) findViewById(R.id.spinner);
+        atmNo = findViewById(R.id.atmNo);
+        amt = (EditText) findViewById(R.id.amt);
+        add = (Button) findViewById(R.id.button2);
 
-        final ArrayList<String> bankList=new ArrayList<>();
+        final ArrayList<String> bankList = new ArrayList<>();
 
-       mRef=mData.getReference("Banks");
-        balRef=mData.getReference("Users");
-        final ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,bankList);
+        mRef = mData.getReference("Banks");
+        balRef = mData.getReference("Users");
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, bankList);
 
         spinner.setAdapter(adapter);
 
@@ -78,12 +78,11 @@ public class AddMoneyActivity extends AppCompatActivity {
 
                 bankList.clear();
 
-                for( DataSnapshot childData :  dataSnapshot.getChildren() ){
+                for (DataSnapshot childData : dataSnapshot.getChildren()) {
 
-                    currentBank=childData.getValue(String.class);
+                    currentBank = childData.getValue(String.class);
                     bankList.add(currentBank);
                     adapter.notifyDataSetChanged();
-
                 }
             }
 
@@ -93,48 +92,42 @@ public class AddMoneyActivity extends AppCompatActivity {
             }
         });
 
-       balRef2=balRef.child( mAuth.getCurrentUser().getUid() ).child("wallet");
-       balRef2.addValueEventListener(new ValueEventListener() {
-           @Override
-           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               balInInt=dataSnapshot.getValue(Integer.class);
-           }
+        balRef2 = balRef.child(mAuth.getCurrentUser().getUid()).child("wallet");
+        balRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                balInInt = dataSnapshot.getValue(Integer.class);
+            }
 
-           @Override
-           public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-           }
-       });
+            }
+        });
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isNetworkAvailable()) {
+                if (isNetworkAvailable()) {
                     String sAmt = amt.getText().toString();
 
                     if (TextUtils.isEmpty(sAmt)) {
                         Toast.makeText(AddMoneyActivity.this, "Please Enter Amount", Toast.LENGTH_SHORT).show();
-                    }
-
-                    else if (atmNo.getText().toString().length()!=6){
+                    } else if (atmNo.getText().toString().length() != 6) {
                         Toast.makeText(AddMoneyActivity.this, "Please Enter Valid digits", Toast.LENGTH_SHORT).show();
 
-                    }
-
-                    else {
+                    } else {
 
                         addBal = Integer.parseInt(sAmt);
                         balInInt = addBal + balInInt;
-                      //  finalBalInString = String.valueOf(balInInt);
                         balRef.child(mAuth.getCurrentUser().getUid()).child("wallet").setValue(balInInt);
                         Toast.makeText(AddMoneyActivity.this, "Added " + addBal + " successfully", Toast.LENGTH_SHORT).show();
                         Intent rIntent = new Intent();
-                        rIntent.putExtra("balance",balInInt);
-                        setResult(RESULT_OK,rIntent);
+                        rIntent.putExtra("balance", balInInt);
+                        setResult(RESULT_OK, rIntent);
                         finish();
                     }
-                }
-                else {
+                } else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(AddMoneyActivity.this);
                     builder1.setMessage("No Internet Connection");
                     builder1.setCancelable(true);
@@ -144,7 +137,7 @@ public class AddMoneyActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     finish();
-                                     startActivity(new Intent(AddMoneyActivity.this,AddMoneyActivity.class));
+                                    startActivity(new Intent(AddMoneyActivity.this, AddMoneyActivity.class));
                                 }
                             });
 
@@ -171,13 +164,12 @@ public class AddMoneyActivity extends AppCompatActivity {
 
     private boolean isNetworkAvailable() {
         boolean connected = false;
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
             //we are connected to a network
             connected = true;
-        }
-        else
+        } else
             connected = false;
 
         return connected;

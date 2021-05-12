@@ -131,11 +131,11 @@ public class AddDetailsActivity extends AppCompatActivity {
         carModel.setText(carSelected.getCarModelName());
         carCapacity.setText(carSelected.getCapacity() + " Seater");
         carLocation.setText(carSelected.getLocation());
-        carPerhour.setText("Per Hour- "+ getString(R.string.currency)+" "+ carSelected.getPerhr());
-        carBase.setText("Initial- "+ getString(R.string.currency)+" " + carSelected.getBase());
+        carPerhour.setText("Per Hour- " + getString(R.string.currency) + " " + carSelected.getPerhr());
+        carBase.setText("Initial- " + getString(R.string.currency) + " " + carSelected.getBase());
 
-        if (carSelected.getImg()!=null && !carSelected.getImg().isEmpty())
-        Picasso.with(getApplicationContext()).load(carSelected.getImg()).into(img);
+        if (carSelected.getImg() != null && !carSelected.getImg().isEmpty())
+            Picasso.with(getApplicationContext()).load(carSelected.getImg()).into(img);
 
         pay.setVisibility(View.GONE);
 
@@ -144,7 +144,6 @@ public class AddDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
 
 
         offersListener = new ValueEventListener() {
@@ -193,7 +192,7 @@ public class AddDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (dataSnapshot.exists()){
+                        if (dataSnapshot.exists()) {
                             rateDeposit = dataSnapshot.getValue(Integer.class);
                             Integer total;
 
@@ -215,9 +214,9 @@ public class AddDetailsActivity extends AppCompatActivity {
                                 total = rateDeposit + rent;
                                 setTotal = total;
                                 mUser.child("total").setValue(total);
-                                numRent.setText(getString(R.string.currency)+" " +String.valueOf(rent));
-                                numDeposit.setText(getString(R.string.currency)+" " +String.valueOf(rateDeposit));
-                                numTotal.setText(getString(R.string.currency)+" " +String.valueOf(total));
+                                numRent.setText(getString(R.string.currency) + " " + String.valueOf(rent));
+                                numDeposit.setText(getString(R.string.currency) + " " + String.valueOf(rateDeposit));
+                                numTotal.setText(getString(R.string.currency) + " " + String.valueOf(total));
 
                                 //  numRent.setText(rent);
                                 //numDeposit.setText();
@@ -235,8 +234,7 @@ public class AddDetailsActivity extends AppCompatActivity {
                             }
 
                             pd.dismiss();
-                        }
-                        else{
+                        } else {
                             pd.dismiss();
                         }
 
@@ -358,16 +356,16 @@ public class AddDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay,
                                           int minute) {
-                        String sHourOfDay,sMinutes;
+                        String sHourOfDay, sMinutes;
 
                         sHourOfDay = Integer.toString(hourOfDay);
                         sMinutes = Integer.toString(minute);
 
-                        if (hourOfDay<10){
-                            sHourOfDay = "0"+sHourOfDay;
+                        if (hourOfDay < 10) {
+                            sHourOfDay = "0" + sHourOfDay;
                         }
-                        if (minute<10){
-                            sMinutes = "0"+sMinutes;
+                        if (minute < 10) {
+                            sMinutes = "0" + sMinutes;
                         }
 
                         String pickupTime = sHourOfDay + ":" + sMinutes;
@@ -394,21 +392,21 @@ public class AddDetailsActivity extends AppCompatActivity {
 
                         monthOfYear += 1;
 
-                        String sDayofMonth,sMonthOfYear,sYear;
+                        String sDayofMonth, sMonthOfYear, sYear;
 
                         sDayofMonth = Integer.toString(dayOfMonth);
                         sMonthOfYear = Integer.toString(monthOfYear);
                         sYear = Integer.toString(year);
 
-                        if (dayOfMonth<10){
-                            sDayofMonth = "0"+sDayofMonth;
+                        if (dayOfMonth < 10) {
+                            sDayofMonth = "0" + sDayofMonth;
                         }
 
-                        if (monthOfYear<10){
-                            sMonthOfYear = "0"+sMonthOfYear;
+                        if (monthOfYear < 10) {
+                            sMonthOfYear = "0" + sMonthOfYear;
                         }
 
-                        String date = sDayofMonth + "-" + sMonthOfYear+"-"+sYear;
+                        String date = sDayofMonth + "-" + sMonthOfYear + "-" + sYear;
 
                         carDate.setText(date);
 
@@ -513,7 +511,6 @@ public class AddDetailsActivity extends AppCompatActivity {
                             startActivityForResult(cardPayIntent, 11);
                             break;
                     }
-
                 }
             }
         });
@@ -528,7 +525,7 @@ public class AddDetailsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (dataSnapshot.getValue(Integer.class)!=null){
+                if (dataSnapshot.getValue(Integer.class) != null) {
                     if (setTotal <= dataSnapshot.getValue(Integer.class)) {
                         pd = new ProgressDialog(AddDetailsActivity.this);
                         pd.setMessage("loading");
@@ -563,8 +560,7 @@ public class AddDetailsActivity extends AppCompatActivity {
                                 finish();
                             }
                         });
-                    }
-                    else {
+                    } else {
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(AddDetailsActivity.this);
                         builder1.setMessage("Insufficient balance");
                         builder1.setCancelable(true);
@@ -591,8 +587,6 @@ public class AddDetailsActivity extends AppCompatActivity {
                         alert.show();
                     }
                 }
-
-
             }
 
             @Override
@@ -600,11 +594,6 @@ public class AddDetailsActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
     }
 
     @Override

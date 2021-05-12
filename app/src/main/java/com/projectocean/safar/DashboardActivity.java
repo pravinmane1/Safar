@@ -37,7 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawerLayout;
-    TextView headerName,headerEmail,headerBalance;
+    TextView headerName, headerEmail, headerBalance;
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     FirebaseDatabase db;
@@ -45,9 +45,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     Integer loadBalance;
     ImageView walletimg;
     CardView cardView;
-    ImageView img1,img2,offer3;
-    boolean val=false;
+    ImageView img1, img2, offer3;
+    boolean val = false;
     GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,15 +59,11 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
 
-
         setContentView(R.layout.activity_dashboard);
 
-        //((DrawerLayout) findViewById(R.id.drawer_layout)).setPadding(0,0,0,getSoftButtonsBarSizePort(this));
-
-
-        mAuth=FirebaseAuth.getInstance();
-         firebaseUser = mAuth.getCurrentUser();
-         db =FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+        db = FirebaseDatabase.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -76,74 +73,73 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer);
 
-        View headerView=navigationView.getHeaderView(0);
+        View headerView = navigationView.getHeaderView(0);
 
-        walletimg =(ImageView) headerView.findViewById(R.id.walletimg);
-        headerName=(TextView)headerView.findViewById(R.id.header_name);
-        headerEmail=(TextView)headerView.findViewById(R.id.header_email);
-        headerBalance=(TextView)headerView.findViewById(R.id.tv_balance);
-        img1=findViewById(R.id.offer1);
-        img2=findViewById(R.id.offer2);
-        offer3=findViewById(R.id.offer3);
-        cardView=findViewById(R.id.cardview);
+        walletimg = (ImageView) headerView.findViewById(R.id.walletimg);
+        headerName = (TextView) headerView.findViewById(R.id.header_name);
+        headerEmail = (TextView) headerView.findViewById(R.id.header_email);
+        headerBalance = (TextView) headerView.findViewById(R.id.tv_balance);
+        img1 = findViewById(R.id.offer1);
+        img2 = findViewById(R.id.offer2);
+        offer3 = findViewById(R.id.offer3);
+        cardView = findViewById(R.id.cardview);
 
-       String id= mAuth.getUid();
+        String id = mAuth.getUid();
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))//"111458686493-4j7c3h8hkh0pbas985vlhj1i1esmniu0.apps.googleusercontent.com"
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-       img1.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent i=new Intent(DashboardActivity.this,OfferActivity.class);
-               i.putExtra("offername","o1");
-               startActivity(i);
-           }
-       });
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DashboardActivity.this, OfferActivity.class);
+                i.putExtra("offername", "o1");
+                startActivity(i);
+            }
+        });
 
-       img2.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent i=new Intent(DashboardActivity.this,OfferActivity.class);
-               i.putExtra("offername","o2");
-               startActivity(i);
-           }
-       });
+        img2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DashboardActivity.this, OfferActivity.class);
+                i.putExtra("offername", "o2");
+                startActivity(i);
+            }
+        });
 
-       offer3.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent i=new Intent(DashboardActivity.this,OfferActivity.class);
-               i.putExtra("offername","o3");
-               startActivity(i);
-           }
-       });
+        offer3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DashboardActivity.this, OfferActivity.class);
+                i.putExtra("offername", "o3");
+                startActivity(i);
+            }
+        });
 
-        mRef= db.getReference("Users");
+        mRef = db.getReference("Users");
 
         //set name to header
-        if (firebaseUser!=null){
+        if (firebaseUser != null) {
             String name = firebaseUser.getDisplayName();
             String email = firebaseUser.getEmail();
             headerName.setText(name);
             headerEmail.setText(email);
         }
 
-
         //set balance to header
-        DatabaseReference balance= mRef.child(id).child("wallet");
+        DatabaseReference balance = mRef.child(id).child("wallet");
         balance.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     loadBalance = dataSnapshot.getValue(Integer.class);
-                    headerBalance.setText(getString(R.string.currency)+" " +loadBalance);
+                    headerBalance.setText(getString(R.string.currency) + " " + loadBalance);
                 }
             }
 
@@ -156,74 +152,57 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         walletimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            startActivity(new Intent(DashboardActivity.this,WalletActivity.class));
-            closeDrawer();
+                startActivity(new Intent(DashboardActivity.this, WalletActivity.class));
+                closeDrawer();
             }
         });
 
-        //toset original color
+        //to set original color
         navigationView.setItemIconTintList(null);
 
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerToggle.setDrawerArrowDrawable(new HamburgerDrawable(this));
-//        drawerToggle.setDrawerIndicatorEnabled(false);
-//        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.pass_white, this.getTheme());
-//        drawerToggle.setHomeAsUpIndicator(drawable);
-//
-//        drawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (drawerLayout.isDrawerVisible(GravityCompat.START)) {
-//                    drawerLayout.closeDrawer(GravityCompat.START);
-//                } else {
-//                    drawerLayout.openDrawer(GravityCompat.START);
-//                }
-//            }
-//        });
-
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(DashboardActivity.this,ShowCarsActivity.class));
-                }
-            });
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardActivity.this, ShowCarsActivity.class));
+            }
+        });
 
     }
-
 
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-
-        if(item.getItemId()!=R.id.logout)
-        closeDrawer();
+        if (item.getItemId() != R.id.logout)
+            closeDrawer();
 
         switch (item.getItemId()) {
             case R.id.my_trips:
-                startActivity(new Intent(DashboardActivity.this,MyTripsActivity.class));
+                startActivity(new Intent(DashboardActivity.this, MyTripsActivity.class));
                 break;
             case R.id.verify_licence:
-                startActivity(new Intent(DashboardActivity.this,VerifyLicenceActivity.class));
+                startActivity(new Intent(DashboardActivity.this, VerifyLicenceActivity.class));
                 break;
 
             case R.id.saved_cards:
-                startActivity(new Intent(DashboardActivity.this,CardsActivity.class));
+                startActivity(new Intent(DashboardActivity.this, CardsActivity.class));
                 break;
 
             case R.id.wallet:
-                startActivity(new Intent(DashboardActivity.this,WalletActivity.class));
+                startActivity(new Intent(DashboardActivity.this, WalletActivity.class));
                 break;
 
             case R.id.policies:
-                startActivity(new Intent(DashboardActivity.this,PoliciesActivity.class));
+                startActivity(new Intent(DashboardActivity.this, PoliciesActivity.class));
                 break;
             case R.id.help_and_support:
-                startActivity(new Intent(DashboardActivity.this,HelpAndSuppportActivity.class));
+                startActivity(new Intent(DashboardActivity.this, HelpAndSuppportActivity.class));
                 break;
             case R.id.logout:
 
@@ -238,9 +217,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                                 mAuth.signOut();
                                 mGoogleSignInClient.signOut();
 
-                               // mGoogleSignInClient.signOut();
-                                Toast.makeText(DashboardActivity.this,"Successfully Signed Out", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(DashboardActivity.this,LoginActivity.class));
+                                // mGoogleSignInClient.signOut();
+                                Toast.makeText(DashboardActivity.this, "Successfully Signed Out", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
                                 finish();
                             }
                         });
@@ -275,21 +254,18 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             closeDrawer();
 
-        }
-
-        else {
-            if(!val) {
+        } else {
+            if (!val) {
                 Toast.makeText(DashboardActivity.this, "Press Again To Exit", Toast.LENGTH_SHORT).show();
                 val = true;
                 new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        val=false;
+                        val = false;
                     }
                 }, 2000);
-            }
-            else {
+            } else {
                 super.onBackPressed();
             }
         }

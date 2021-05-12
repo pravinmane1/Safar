@@ -36,9 +36,9 @@ public class ShowCarsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_cars);
-        toolbar=findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Intent i=getIntent();
+        Intent i = getIntent();
 
         db = FirebaseDatabase.getInstance();
 
@@ -48,54 +48,40 @@ public class ShowCarsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
-
-       // mDatabase.keepSynced(true);
-        //
-        mCarlist=(RecyclerView)findViewById(R.id.myrecycleview);
+        mCarlist = (RecyclerView) findViewById(R.id.myrecycleview);
         mCarlist.setHasFixedSize(true);
         mCarlist.setLayoutManager(new LinearLayoutManager(this));
     }
 
 
-    private void  firebaseSearch(Query q){
+    private void firebaseSearch(Query q) {
 
-        FirebaseRecyclerAdapter<Car, CarViewHolder>  firebaseRecyclerAdapter
+        FirebaseRecyclerAdapter<Car, CarViewHolder> firebaseRecyclerAdapter
                 = new FirebaseRecyclerAdapter<Car, CarViewHolder>(Car.class,
                 R.layout.car_row,
                 CarViewHolder.class,
-                q)
-
-                    {
+                q) {
             @Override
-            protected void populateViewHolder(CarViewHolder viewHolder, final Car model, int position)  {
+            protected void populateViewHolder(CarViewHolder viewHolder, final Car model, int position) {
 
-                viewHolder.setDetails( model.getNumberPlate(),model.getCarModelName(),model.getAvailability(),getApplicationContext(), model.getImg(),model.getCapacity(),model.getLocation(),model.getPerhr(),model.getBase(),"customer");
+                viewHolder.setDetails(model.getNumberPlate(), model.getCarModelName(), model.getAvailability(), getApplicationContext(), model.getImg(), model.getCapacity(), model.getLocation(), model.getPerhr(), model.getBase(), "customer");
 
                 viewHolder.car_book.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
                         if (model.getAvailability().equals("UNAVAILABLE"))
-                            Toast.makeText(ShowCarsActivity.this,"Car is Already Booked", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ShowCarsActivity.this, "Car is Already Booked", Toast.LENGTH_LONG).show();
 
-                        else{
-
-                            Intent i=new Intent(view.getContext(),AddDetailsActivity.class);
-
-
-                            i.putExtra("Car",model);
+                        else {
+                            Intent i = new Intent(view.getContext(), AddDetailsActivity.class);
+                            i.putExtra("Car", model);
                             startActivity(i);
-
                         }
                     }
 
                 });
-
-
             }
-
-
         };
         mCarlist.setAdapter(firebaseRecyclerAdapter);
 
@@ -104,24 +90,23 @@ public class ShowCarsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         firebaseSearch(db.getReference("Cars"));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //inflate the menu; this adds items to the action bar if it present
-        getMenuInflater().inflate(R.menu.menu2,menu);
-        MenuItem item=menu.findItem(R.id.action_search);
-        SearchView searchView=(SearchView) MenuItemCompat.getActionView(item);
+        getMenuInflater().inflate(R.menu.menu2, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setQueryHint("Enter Location to Search");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                String text=query.toLowerCase();
-                firebaseSearchQuery = db.getReference("Cars").orderByChild("search").startAt(text).endAt(text+"\uf8ff");
+                String text = query.toLowerCase();
+                firebaseSearchQuery = db.getReference("Cars").orderByChild("search").startAt(text).endAt(text + "\uf8ff");
                 firebaseSearch(firebaseSearchQuery);
                 return false;
             }
@@ -129,8 +114,8 @@ public class ShowCarsActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 //filter as u type
-                String text=newText.toLowerCase();
-                firebaseSearchQuery =  db.getReference("Cars").orderByChild("search").startAt(text).endAt(text+"\uf8ff");
+                String text = newText.toLowerCase();
+                firebaseSearchQuery = db.getReference("Cars").orderByChild("search").startAt(text).endAt(text + "\uf8ff");
                 firebaseSearch(firebaseSearchQuery);
                 return false;
             }
@@ -138,12 +123,11 @@ public class ShowCarsActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id=item.getItemId();
+        int id = item.getItemId();
         //handle other action bar item clicks here
-        if (id==R.id.action_settings){
+        if (id == R.id.action_settings) {
             finish();
             return true;
         }
@@ -155,19 +139,4 @@ public class ShowCarsActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
-    private boolean isNetworkAvailable() {
-        boolean connected = false;
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            connected = true;
-        }
-        else
-            connected = false;
-
-        return connected;
-    }
-
 }

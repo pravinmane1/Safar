@@ -22,11 +22,12 @@ public class WalletActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseDatabase mData;
     DatabaseReference mRef;
-    String loadName,loadEmail,loadPhone;
+    String loadName, loadEmail, loadPhone;
     Integer loadBalance;
-    TextView Name,Email,Balance,Phone;
+    TextView Name, Email, Balance, Phone;
     Button btnAddMoney;
     ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,19 +39,19 @@ public class WalletActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        Intent i=getIntent();
+        Intent i = getIntent();
 
-        mAuth=FirebaseAuth.getInstance();
-        mData=FirebaseDatabase.getInstance();
-        mRef=mData.getReference("Users");
+        mAuth = FirebaseAuth.getInstance();
+        mData = FirebaseDatabase.getInstance();
+        mRef = mData.getReference("Users");
 
-        Name=(TextView)findViewById(R.id.w_name);
-        Email=(TextView)findViewById(R.id.w_email);
-        Balance=(TextView)findViewById(R.id.w_balance);
-        Phone=(TextView)findViewById(R.id.w_phone);
-        btnAddMoney=(Button)findViewById(R.id.button) ;
+        Name = (TextView) findViewById(R.id.w_name);
+        Email = (TextView) findViewById(R.id.w_email);
+        Balance = (TextView) findViewById(R.id.w_balance);
+        Phone = (TextView) findViewById(R.id.w_phone);
+        btnAddMoney = (Button) findViewById(R.id.button);
 
-        String id= mAuth.getCurrentUser().getUid();
+        String id = mAuth.getCurrentUser().getUid();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -62,26 +63,26 @@ public class WalletActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 progressDialog.dismiss();
-                if (dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
 
-                    if (dataSnapshot.child("name").exists()){
+                    if (dataSnapshot.child("name").exists()) {
                         Name.setText(dataSnapshot.child("name").getValue(String.class));
                         Name.setVisibility(View.VISIBLE);
                     }
 
-                    if (dataSnapshot.child("email").exists()){
+                    if (dataSnapshot.child("email").exists()) {
                         Email.setText(dataSnapshot.child("email").getValue(String.class));
                         Email.setVisibility(View.VISIBLE);
                     }
 
 
-                    if (dataSnapshot.child("phone").exists()){
+                    if (dataSnapshot.child("phone").exists()) {
                         Phone.setText(dataSnapshot.child("phone").getValue(String.class));
                         Phone.setVisibility(View.VISIBLE);
                     }
 
-                    if (dataSnapshot.child("wallet").exists()){
-                        Balance.setText(getString(R.string.currency)+" " +dataSnapshot.child("wallet").getValue(Long.class));
+                    if (dataSnapshot.child("wallet").exists()) {
+                        Balance.setText(getString(R.string.currency) + " " + dataSnapshot.child("wallet").getValue(Long.class));
                         Balance.setVisibility(View.VISIBLE);
                     }
                 }
@@ -94,26 +95,26 @@ public class WalletActivity extends AppCompatActivity {
         });
 
 
-        DatabaseReference name= mRef.child(id).child("name");
+        DatabaseReference name = mRef.child(id).child("name");
         name.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                loadName=dataSnapshot.getValue().toString();
-                Name.setText(loadName );
-
+                loadName = dataSnapshot.getValue().toString();
+                Name.setText(loadName);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
         //set Email to wallet
-        DatabaseReference email= mRef.child(id).child("email");
+        DatabaseReference email = mRef.child(id).child("email");
         email.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                loadEmail=dataSnapshot.getValue().toString();
-                Email.setText(loadEmail );
+                loadEmail = dataSnapshot.getValue().toString();
+                Email.setText(loadEmail);
 
             }
 
@@ -124,12 +125,12 @@ public class WalletActivity extends AppCompatActivity {
         });
 
         //set balance to walllet
-        DatabaseReference balance= mRef.child(id).child("wallet");
+        DatabaseReference balance = mRef.child(id).child("wallet");
         balance.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                loadBalance=dataSnapshot.getValue(Integer.class);
-                Balance.setText(getString(R.string.currency)+" " +String.valueOf(loadBalance) );
+                loadBalance = dataSnapshot.getValue(Integer.class);
+                Balance.setText(getString(R.string.currency) + " " + String.valueOf(loadBalance));
 
             }
 
@@ -141,15 +142,14 @@ public class WalletActivity extends AppCompatActivity {
 
 
         //set phone to walllet
-        DatabaseReference phone= mRef.child(id).child("phone");
+        DatabaseReference phone = mRef.child(id).child("phone");
         phone.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
-                    loadPhone=dataSnapshot.getValue().toString();
-                    Phone.setText(loadPhone );
+                if (dataSnapshot.exists()) {
+                    loadPhone = dataSnapshot.getValue().toString();
+                    Phone.setText(loadPhone);
                 }
-
             }
 
             @Override
@@ -161,7 +161,7 @@ public class WalletActivity extends AppCompatActivity {
         btnAddMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(WalletActivity.this,AddMoneyActivity.class));
+                startActivity(new Intent(WalletActivity.this, AddMoneyActivity.class));
             }
         });
     }

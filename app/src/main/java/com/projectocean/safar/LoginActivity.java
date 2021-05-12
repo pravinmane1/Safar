@@ -12,15 +12,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.projectocean.safar.models.User;
-import com.projectocean.safar.sql.DatabaseHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,37 +36,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import com.projectocean.safar.models.User;
+import com.projectocean.safar.sql.DatabaseHelper;
 
 
 public class LoginActivity extends AppCompatActivity {
     ProgressDialog pd;
-   // boolean inDash=false;
     EditText etEmail, etPassword;
     TextView tvRegister;
     Button btnLogin;
-    EditText ph;
-    String code;
     private FirebaseAuth mAuth;
-    private DatabaseReference mRef,delReq;
-   // private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mRef;
     FirebaseUser currentUser;
     SignInButton google;
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount account;
-    String personName,personEmail;
+    String personName, personEmail;
     ValueEventListener v;
-    Date currentTime;
-    Long ts;
     boolean signInStatus = false;
-    DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.getDefault());
-    private DatabaseHelper databaseHelper;
     FirebaseDatabase db;
     String uid;
     TextView adminLogin;
@@ -85,20 +69,12 @@ public class LoginActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
 
-
         setContentView(R.layout.activity_login);
-
-      //  ((ScrollView) findViewById(R.id.container)).setPadding(0,0,0,getSoftButtonsBarSizePort(this));
-
-
-        RelativeLayout scrollView = findViewById(R.id.container1);
-
-
 
         db = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getUid();
-        
+
         pd = new ProgressDialog(LoginActivity.this);
         pd.setMessage("loading");
         pd.setCancelable(false);
@@ -109,28 +85,25 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
 
-         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mAuth = FirebaseAuth.getInstance();
 
-         currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
 
-         account = GoogleSignIn.getLastSignedInAccount(this);
-
-        Intent i=getIntent();
-
+        account = GoogleSignIn.getLastSignedInAccount(this);
 
         etEmail = (EditText) findViewById(R.id.email);
         etPassword = (EditText) findViewById(R.id.password);
         tvRegister = (TextView) findViewById(R.id.register);
         btnLogin = (Button) findViewById(R.id.btn_login);
-        google=findViewById(R.id.google);
+        google = findViewById(R.id.google);
         adminLogin = findViewById(R.id.admin_login);
 
         adminLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,AdminLoginActivity.class));
+                startActivity(new Intent(LoginActivity.this, AdminLoginActivity.class));
                 finish();
             }
         });
@@ -146,47 +119,37 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                startSignIn(etEmail.getText().toString(),etPassword.getText().toString());
-
-
+                startSignIn(etEmail.getText().toString(), etPassword.getText().toString());
             }
         });
-
 
         tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 finish();
-
             }
         });
 
-        mRef=FirebaseDatabase.getInstance().getReference("Users");
+        mRef = FirebaseDatabase.getInstance().getReference("Users");
 
-
-
-        v= new ValueEventListener() {
+        v = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("updateui","mref value event listened");
+                Log.d("updateui", "mref value event listened");
 
-           //     if (!inDash) {
-                    if (!dataSnapshot.child(mAuth.getCurrentUser().getUid()).exists()) {
-                        User user = new User(personName, personEmail, null, false, null, 0, 0);
-                        mRef.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                updateUI(mAuth.getCurrentUser());
-
-                            }
-                        });
-                    } else {
-                        updateUI(mAuth.getCurrentUser());
-                    }
+                if (!dataSnapshot.child(mAuth.getCurrentUser().getUid()).exists()) {
+                    User user = new User(personName, personEmail, null, false, null, 0, 0);
+                    mRef.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            updateUI(mAuth.getCurrentUser());
+                        }
+                    });
+                } else {
+                    updateUI(mAuth.getCurrentUser());
                 }
-          //  }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -198,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-       updateUI(mAuth.getCurrentUser());
+        updateUI(mAuth.getCurrentUser());
     }
 
 
@@ -206,38 +169,29 @@ public class LoginActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(pass)) {
             Toast.makeText(this, "Fields are empty", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
 
             pd.show();
-           // getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
             mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, "Login problem", Toast.LENGTH_LONG).show();
-                        pd.dismiss();
+                if (!task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Login problem", Toast.LENGTH_LONG).show();
+                    pd.dismiss();
 
-                    }
-                    else{
-                        signInStatus = true;
-                        updateUI(mAuth.getCurrentUser());
-                    }
-
-                   // getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
+                } else {
+                    signInStatus = true;
+                    updateUI(mAuth.getCurrentUser());
+                }
                 }
             });
         }
-
         return signInStatus;
-
     }
 
 
-    void signIn(){
+    void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 9001);
         pd.show();
@@ -273,78 +227,67 @@ public class LoginActivity extends AppCompatActivity {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
-         personName = acct.getDisplayName();
+        personName = acct.getDisplayName();
         String personGivenName = acct.getGivenName();
         final String personFamilyName = acct.getFamilyName();
-         personEmail = acct.getEmail();
+        personEmail = acct.getEmail();
 
         Log.d("abc", "firebaseAuthWithGoogle:" + acct.getId());
         // [START_EXCLUDE silent]
         //showProgressDialog();
         // [END_EXCLUDE]
-pd.show();
+        pd.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("updateui","auth complete listener is being called");
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.d("updateui", "auth complete listener is being called");
 
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
-                            pd.dismiss();
-                        }
-                        else{
-
-
-                            mRef.addValueEventListener(v);
-
-
-                        }
-
-                    }
-                });
-    }
-
-   private boolean updateUI(FirebaseUser firebaseUser){
-
-Log.d("updateui","updateUI is getting called");
-
-                if (firebaseUser != null ) {
-
-
-
-                    databaseHelper = new DatabaseHelper(this);
-                    Cursor cursor = databaseHelper.getData();
-                    cursor.moveToNext();
-                    if (cursor.getCount()==0){
-                        if (pd.isShowing())
-                            pd.dismiss();
-                        mRef.removeEventListener(v);
-                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                        finish();
-                    }
-                    else if ( cursor.getString(cursor.getColumnIndex("TYPE")).equals("admin")){
-                        if (pd.isShowing())
-                            pd.dismiss();
-                        mRef.removeEventListener(v);
-                        startActivity(new Intent(LoginActivity.this, AdminDashboardActivity.class));
-                        finish();
-                    }
-                    else{
-                        if (pd.isShowing())
-                            pd.dismiss();
-                        mRef.removeEventListener(v);
-                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                        finish();
-                    }
-
-
-                    return true;
+                if (!task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                    pd.dismiss();
+                } else {
+                    mRef.addValueEventListener(v);
                 }
 
-                return false;
+                }
+            });
+    }
+
+    private boolean updateUI(FirebaseUser firebaseUser) {
+
+        Log.d("updateui", "updateUI is getting called");
+
+        if (firebaseUser != null) {
+
+            DatabaseHelper databaseHelper = new DatabaseHelper(this);
+            Cursor cursor = databaseHelper.getData();
+            cursor.moveToNext();
+            if (cursor.getCount() == 0) {
+                if (pd.isShowing())
+                    pd.dismiss();
+                mRef.removeEventListener(v);
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                finish();
+            } else if (cursor.getString(cursor.getColumnIndex("TYPE")).equals("admin")) {
+                if (pd.isShowing())
+                    pd.dismiss();
+                mRef.removeEventListener(v);
+                startActivity(new Intent(LoginActivity.this, AdminDashboardActivity.class));
+                finish();
+            } else {
+                if (pd.isShowing())
+                    pd.dismiss();
+                mRef.removeEventListener(v);
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                finish();
+            }
+            return true;
+        }
+
+        return false;
     }
 
 }
